@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+<script src="/javascripts/browserMqtt.js"></script>
+
+
+
+<h1><%= title %></h1>
+<p>Welcome to <%= title %></p>
+
+<textarea name="chattext"></textarea>
+<br/>
+<form id="text_form" method="POST" action="/">
+    msg by server:<input type="text" name="content"><br/>
+
+    <input class="submit" type="submit" value="submit"/>
+    <br/>
+</form>
+
+msg by client:<input type="text" name="contentByClient"><br/>
+<input class="submit" type="submit" value="submit"  onclick="sendMsg();" />
+
+<br/><br/>
+
+<!--compare client -->
+<textarea name="chattext"></textarea>
+<br/>
+msg by client:<input type="text" name="contentByClient">
+<br/>
+<input class="submit" type="submit" value="submit"  onclick="sendMsg2();" />
+
+<script>
+    var client = mqtt.connect('ws://127.0.0.1:5000'); // you add a ws:// url here
+
+    var client2 = mqtt.connect('ws://127.0.0.1:5000'); // you add a ws:// url here
+    var ct = document.getElementsByName("chattext")[0];
+    var contentbyclient = document.getElementsByName("contentByClient")[0];
+
+    var ct2 = document.getElementsByName("chattext")[1];
+    var contentbyclient2 = document.getElementsByName("contentByClient")[1];
+
+    client.subscribe("presence");
+    client.on("message", function(topic, payload) {
+        ct2.value=ct2.value+payload
+    });
+
+    client2.subscribe("presence");
+    client2.on("message", function(topic, payload) {
+        ct.value=ct.value+payload
+    });
+    //  client.publish("presence", "hello world!");
+
+    function sendMsg()
+    {
+        client.publish("presence", contentbyclient.value);
+    }
+
+    function sendMsg2()
+    {
+        client.publish("presence", contentbyclient2.value);
+    }
+
+
+</script>
+</body>
+</html>
