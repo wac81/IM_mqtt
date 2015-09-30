@@ -1,13 +1,10 @@
-/**
- * Created by wac on 9/29/15.
- */
 var mqtt    = require('mqtt');
 //var client  = mqtt.connect('ws://test.mosquitto.org:80/mqtt');
 var settings = {
     keepalive: 10,
     protocolId: 'websocket',
     //protocolVersion: 3,
-    clientId: 'client-a',
+    clientId: 'client-b',
 //        clientId: client_Id,
     username:"alice",
     password:"secret",
@@ -15,17 +12,14 @@ var settings = {
 
 }
 var client  = mqtt.connect('ws://127.0.0.1:5000',settings);
-client.publish("presence", 'hello offline msg1',{qos:1});
-client.publish("presence", 'hello offline msg2',{qos:1});
-client.publish("presence", 'hello offline msg3',{qos:1});
-client.publish("presence", 'hello offline msg4',{qos:1});
 
+client.subscribe('presence',{qos:1});
+//client.on('connect', function () {
+//    client.subscribe('presence',{qos:1});
+//});
 
 client.on('message', function (topic, message) {
     // message is Buffer
     console.log(message.toString());
     //client.end();
 });
-
-
-

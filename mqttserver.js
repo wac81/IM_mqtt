@@ -2,20 +2,52 @@
  * Created by wac on 9/29/15.
  */
 var mosca = require('mosca');
+var mongoUrl = 'mongodb://localhost:27017/mqtt';
+//mongodb
+var ascoltatore = {
+    //using ascoltatore
+    type: 'mongo',
+    url: mongoUrl,
+    pubsubCollection: 'ascoltatori',
+    mongo: {}
+};
 
+//zmq
+//var ascoltatore = {
+//    type: 'zmq',
+//    json: false,
+//    zmq: require("zmq"),
+//    port: "tcp://127.0.0.1:33333",
+//    controlPort: "tcp://127.0.0.1:33334",
+//    delay: 5
+//};
+
+var settings = {
+    http: {
+        port: 5000,
+        bundle: true,
+        static: './'
+    },
+    persistence: {
+        factory: mosca.persistence.Mongo,
+        url: mongoUrl,
+    },
+    backend: ascoltatore
+};
 // mqtt protocol
 //var MqttServer = new mosca.Server({
 //    port: 8000
 //});
 
 //for websocket protocol
-var MqttServer = new mosca.Server({
-    http: {
-        port: 5000,
-        bundle: true,
-        static: './'
-    }
-});
+//var MqttServer = new mosca.Server({
+//    http: {
+//        port: 5000,
+//        bundle: true,
+//        static: './'
+//    }
+//});
+var MqttServer = new mosca.Server(settings);
 
 MqttServer.on('clientConnected', function(client){
     console.log('client connected', client.id);
@@ -40,9 +72,25 @@ MqttServer.on('published', function(packet, client) {
             console.log('message-123', packet.payload.toString());
             break;
     }
+    console.log("Published :=", packet.payload);
 });
 
-MqttServer.on('ready', function(){
+MqttServer.on("error", function (err) {
+    console.log(err);
+});
+
+MqttServer.on('subscribed', function (topic, client) {
+    console.log("Subscribed :=", client.id);
+});
+
+MqttServer.on('clientDisconnected', function (client) {
+    console.log('Client Disconnected     := ', client.id);
+});
+MqttServer.on('ready', function() {
+    //MqttServer.authenticate = authenticate;
+    //MqttServer.authorizePublish = authorizePublish;
+    //MqttServer.authorizeSubscribe = authorizeSubscribe;
+
     console.log('mqtt is running...');
 });
 
@@ -52,10 +100,28 @@ MqttServer.on('ready', function(){
  **/
 var authenticate = function(client, username, password, callback) {
     //var authorized = (username.toString() === '18FE34F48379-DC' && password.toString() === '666666');
-    var authorized = (password.toString() === '666666');
-    if (authorized){
-        //存储设备类型
-        client.type = username.toString().split('-')[1];
-    }
+    var authorized = (username=== 'alice' && password.toString() == 'secret' );
+    //if (authorized)
+        //client.user= username;
     callback(null, authorized);
 }
+
+// the username from the topic and verifing it is the same of the authorized user
+var authorizePublish = function(client, topic, payload, callback) {
+    //var ok = client.user == topic.split('/')[2];
+    // we can alter the message here
+    //if (ok) callback(null, payload);
+    //else callback(null, false);
+
+    callback(null, true);
+}
+
+// In this case the client authorized as alice can subscribe to /users/alice taking
+// the username from the topic and verifing it is the same of the authorized user
+var authorizeSubscribe = function(client, topic, callback) {
+    //var ok = client.user === topic.split('/')[2];
+    //callback(null, ok);
+
+    callback(null, true);
+}
+

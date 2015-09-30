@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
-var mqtt    = require('mqtt');
-var client  = mqtt.connect('ws://127.0.0.1:5000');
-
-var request = require('request')
+//var mqtt    = require('mqtt');
+//var client  = mqtt.connect('ws://127.0.0.1:5000');
+//
+//var request = require('request')
 
 //client.subscribe('presence');
 //

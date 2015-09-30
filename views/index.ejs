@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset='utf-8'>
   <title><%= title %></title>
   <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
@@ -12,58 +13,82 @@
 <h1><%= title %></h1>
 <p>Welcome to <%= title %></p>
 
-<textarea name="chattext"></textarea>
+<textarea name="chattext"  rows="20" cols="40" readonly="true"></textarea>
 <br/>
-<form id="text_form" method="POST" action="/">
-    msg by server:<input type="text" name="content"><br/>
+<!--<form id="text_form" method="POST" action="/">-->
+    <!--msg by server:<input type="text" name="content"><br/>-->
 
-    <input class="submit" type="submit" value="submit"/>
-    <br/>
-</form>
+    <!--<input class="submit" type="submit" value="submit"/>-->
+    <!--<br/>-->
+<!--</form>-->
 
-msg by client:<input type="text" name="contentByClient"><br/>
-<input class="submit" type="submit" value="submit"  onclick="sendMsg();" />
+msg by client:<input type="text" name="contentByClient" onkeypress="if(event.keyCode==13) {btn.click();return false;}"><br/>
+<input class="submit" type="submit" value="submit" name="btn" onclick="sendMsg();" />
+<input class="submit" type="submit" value="close" name="btnclose" onclick="closeClient();" />
 
 <br/><br/>
 
 <!--compare client -->
-<textarea name="chattext"></textarea>
-<br/>
-msg by client:<input type="text" name="contentByClient">
-<br/>
-<input class="submit" type="submit" value="submit"  onclick="sendMsg2();" />
+<!--<textarea name="chattext"></textarea>-->
+<!--<br/>-->
+<!--msg by client:<input type="text" name="contentByClient">-->
+<!--<br/>-->
+<!--<input class="submit" type="submit" value="submit"  onclick="sendMsg2();" />-->
 
 <script>
-    var client = mqtt.connect('ws://127.0.0.1:5000'); // you add a ws:// url here
+    var client_Id = 'user_' + Math.random().toString(16).substr(2, 8);
+    var settings = {
+        keepalive: 10,
+        protocolId: 'websocket',
+//        protocolVersion: 3,
+        clientId: 'client-f',
+//        clientId: client_Id,
+        username:"alice",
+        password:"secret",
+        clean: false
+    }
 
-    var client2 = mqtt.connect('ws://127.0.0.1:5000'); // you add a ws:// url here
+    var client = mqtt.connect('ws://127.0.0.1:5000',settings); // you add a ws:// url here
+
     var ct = document.getElementsByName("chattext")[0];
     var contentbyclient = document.getElementsByName("contentByClient")[0];
 
-    var ct2 = document.getElementsByName("chattext")[1];
-    var contentbyclient2 = document.getElementsByName("contentByClient")[1];
+    client.subscribe("presence",{qos:1});
+//    client.on('connect', function () {
+//        client.subscribe("presence",{qos:1}); //qos  offline msg
+//    });
 
-    client.subscribe("presence");
+    client.on('error', function (err) {
+        console.log(err);
+//        client.end();
+    });
+
     client.on("message", function(topic, payload) {
-        ct2.value=ct2.value+payload
+        var pl = JSON.parse(payload)
+        if (pl.userid==settings.clientId)
+            ct.value=ct.value+"\r\n"+"我:"+pl.content;
+        else
+            ct.value=ct.value+"\r\n"+pl.userid+":"+pl.content;
     });
 
-    client2.subscribe("presence");
-    client2.on("message", function(topic, payload) {
-        ct.value=ct.value+payload
-    });
-    //  client.publish("presence", "hello world!");
+//    client.on('close', function () {
+////        alert(settings.clientId + " disconected")
+//        console.log(settings.clientId + " disconected");
+//    });
 
     function sendMsg()
     {
-        client.publish("presence", contentbyclient.value);
+//        client_Id+":"+contentbyclient.value
+        var pl={"userid":settings.clientId,"content":contentbyclient.value+ Math.random().toString(16).substr(2, 8)};
+        pl = JSON.stringify(pl)
+        client.publish("presence", pl,{qos: 1});
+
     }
 
-    function sendMsg2()
+    function closeClient()
     {
-        client.publish("presence", contentbyclient2.value);
+        client.end();
     }
-
 
 </script>
 </body>
