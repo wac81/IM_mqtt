@@ -9,7 +9,7 @@ if (cluster.isMaster) {
     console.log("==start main process==");
     console.log("==cpu_num=="+cpu_num);
 
-    for (var i = 0; i < cpu_num; i++) {
+    for (var i = 0; i < 4; i++) {
         cluster.fork();
         //根据cpu的数量主进程 fork 了相同数量的子进程出来
     }
@@ -56,6 +56,7 @@ if (cluster.isMaster) {
             factory: mosca.persistence.Mongo,
             url: mongoUrl,
         },
+        maxInflightMessages:300,
         backend: ascoltatore
     };
 // mqtt protocol

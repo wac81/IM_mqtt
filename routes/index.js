@@ -27,10 +27,12 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  if(req.body.content!=null) {
-     return  client.publish('presence', req.body.content);
-  }
-    return
+  //if(req.body.content!=null) {
+  //   return  client.publish('presence', req.body.content);
+  //}
+  //  return
+    res.render('client', { username: req.body.username })
+    //res.redirect('./client.html?username='+req.body.username);
 });
 
 module.exports = router;

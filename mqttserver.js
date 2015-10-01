@@ -32,6 +32,7 @@ var settings = {
         factory: mosca.persistence.Mongo,
         url: mongoUrl,
     },
+    maxInflightMessages:300,
     backend: ascoltatore
 };
 // mqtt protocol
