@@ -12,7 +12,7 @@
 <br/>
 <!--<input class="submit" type="submit" value="close" name="btnclose" onclick="closeClient();" />-->
 <!--<br>-->
-<label name="username" ><%= username %>:</label>
+<label name="username" ><%= username %></label>:
 <!--<input type="text" name="username"  value="<%= username %>" disabled="true">-->
 <br>
 
@@ -22,7 +22,6 @@
 
 
 <script>
-
     var settings={}
     var client_Id = 'user_' + Math.random().toString(16).substr(2, 8);
     settings = {
@@ -37,7 +36,7 @@
     }
 
 
-    settings.clientId =  document.getElementsByName("username")[0].value;
+    settings.clientId =  document.getElementsByName("username")[0].innerText.trim();
 //    var client = mqtt.connect('ws://127.0.0.1:5000', settings); // you add a ws:// url here
         client = mqtt.connect('ws://acnlp.com:5000', settings);
     var ct = document.getElementsByName("chattext")[0];
