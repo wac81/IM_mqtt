@@ -2,20 +2,21 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
     <script src="/javascripts/browserMqtt.js" charset="utf-8"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
 <body>
-<p>Welcome to IM</p>
-<input class="submit" type="submit" value="close" name="btnclose" onclick="closeClient();" />
-<br/>
-<textarea name="chattext"  rows="20" cols="40" readonly="true"></textarea>
-<br/>
 
-username:<input type="text" name="username"  value="<%= username %>" disabled="true">
-
+<textarea name="chattext"  rows="20" cols="38" readonly="true"></textarea>
+<br/>
+<!--<input class="submit" type="submit" value="close" name="btnclose" onclick="closeClient();" />-->
+<!--<br>-->
+<label name="username" ><%= username %>:</label>
+<!--<input type="text" name="username"  value="<%= username %>" disabled="true">-->
 <br>
-msg by client:<input type="text" name="contentByClient" onkeypress="if(event.keyCode==13) {btn.click();return false;}">
+
+<input type="text" name="contentByClient" style="width:320px"  onkeypress="if(event.keyCode==13) {btn.click();return false;}">
 <input class="submit" type="submit" value="submit" name="btn" onclick="sendMsg();" />
 
 

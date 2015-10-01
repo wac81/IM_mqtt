@@ -1,6 +1,6 @@
 body {
-  padding: 50px;
-  font: 30px "Lucida Grande", Helvetica, Arial, sans-serif;
+  padding: 10px;
+  font: 18px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
@@ -13,9 +13,11 @@ a {
   /*width: 120px;*/
 }
 
-input {FONT-SIZE: 30px;   FONT-FAMILY:"宋体","Verdana";}
+input {FONT-SIZE: 20px;   FONT-FAMILY:"宋体","Verdana";}
 
-TEXTAREA {FONT-SIZE: 30px; FONT-FAMILY: "宋体","Tahoma"}
+button {height: 180px;}
 
-label {FONT-SIZE: 30px;   FONT-FAMILY:"宋体","Verdana";}
+TEXTAREA {FONT-SIZE: 16px; FONT-FAMILY: "宋体","Tahoma"}
+
+label {FONT-SIZE: 18px;   FONT-FAMILY:"宋体","Verdana";}
 
