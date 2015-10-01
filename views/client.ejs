@@ -83,7 +83,7 @@
         var pl = {"userid": settings.clientId, "content": contentbyclient.value + '   ' + date};
         pl = JSON.stringify(pl)
         client.publish("presence", pl, {qos: 1});
-
+        contentbyclient.value = "";
     }
 
     function closeClient()
