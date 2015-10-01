@@ -1,6 +1,7 @@
 <html>
 <head>
     <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <script src="/javascripts/browserMqtt.js" charset="utf-8"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
@@ -36,8 +37,8 @@ msg by client:<input type="text" name="contentByClient" onkeypress="if(event.key
 
 
     settings.clientId =  document.getElementsByName("username")[0].value;
-    var client = mqtt.connect('ws://127.0.0.1:5000', settings); // you add a ws:// url here
-//        client = mqtt.connect('ws://acnlp.com:5000', settings);
+//    var client = mqtt.connect('ws://127.0.0.1:5000', settings); // you add a ws:// url here
+        client = mqtt.connect('ws://acnlp.com:5000', settings);
     var ct = document.getElementsByName("chattext")[0];
 
 
