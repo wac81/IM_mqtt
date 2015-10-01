@@ -16,7 +16,7 @@
 <!--<input type="text" name="username"  value="<%= username %>" disabled="true">-->
 <br>
 
-<input type="text" name="contentByClient" style="width:320px"  onkeypress="if(event.keyCode==13) {btn.click();return false;}">
+<input type="text" name="contentByClient" style="width:320px"  onkeypress="if(event.keyCode==13) {sendMsg();}">
 <input class="submit" type="submit" value="submit" name="btn" onclick="sendMsg();" />
 
 
