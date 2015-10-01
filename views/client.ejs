@@ -59,6 +59,8 @@
             ct.value = ct.value + "\r\n" + "我:" + pl.content;
         else
             ct.value = ct.value + "\r\n" + pl.userid + ":" + pl.content;
+
+        ct.scrollTop = ct.scrollHeight
     });
 
 //    client.on('close', function () {
