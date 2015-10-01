@@ -14,6 +14,8 @@ var settings = {
     clean: false
 
 }
+
+//var client = mqtt.connect('ws://acnlp.com:5000', settings);
 var client  = mqtt.connect('ws://127.0.0.1:5000',settings);
 client.publish("presence", 'hello offline msg1',{qos:1});
 client.publish("presence", 'hello offline msg2',{qos:1});
