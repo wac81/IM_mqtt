@@ -5,22 +5,24 @@
     <!--<meta http-equiv="X-UA-Compatible" content="IE=edge" />-->
   <title><%= title %></title>
   <link rel='stylesheet' href='/stylesheets/style.css' />
+
 </head>
-<body>
+<body >
 <script src="/javascripts/browserMqtt.js"></script>
 
 
 
 <h1><%= title %></h1>
 <p>Welcome to <%= title %></p>
-<input class="submit" type="submit" value="close" name="btnclose" onclick="closeClient();" />
-<br/>
-<textarea name="chattext"  rows="20" cols="40" readonly="true"></textarea>
-<br/>
+<!--<input class="submit" type="submit" value="close" name="btnclose" onclick="closeClient();" />-->
+<!--<br/>-->
+<!--<textarea name="chattext"  rows="20" cols="40" readonly="true"></textarea>-->
+<!--<br/>-->
 <form id="text_form" method="POST" action="/">
-    username:<input type="text" name="username"><br/>
+    <label>username:</label>
+    <input  type="text" name="username" ><br/>
 
-    <input class="submit" type="submit" value="submit"/>
+    <input type="submit" value="submit"/>
     <br/>
 </form>
 <!--username:<input type="text" name="username" onkeypress="if(event.keyCode==13) {btnname.click();return false;}">-->

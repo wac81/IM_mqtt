@@ -6,3 +6,16 @@ body {
 a {
   color: #00B7FF;
 }
+
+
+.bigfont {
+  height: 36px;
+  /*width: 120px;*/
+}
+
+input {FONT-SIZE: 30px;   FONT-FAMILY:"ËÎÌו","Verdana";}
+
+TEXTAREA {FONT-SIZE: 30px; FONT-FAMILY: "ËÎÌו","Tahoma"}
+
+label {FONT-SIZE: 30px;   FONT-FAMILY:"ËÎÌו","Verdana";}
+

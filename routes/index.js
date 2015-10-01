@@ -23,7 +23,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express',text:'wactest' });
+  res.render('index', { title: 'IM_mqtt' });
 });
 
 router.post('/', function(req, res, next) {
