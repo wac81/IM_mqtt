@@ -3,17 +3,38 @@
     <script src="/javascripts/browserMqtt.js"></script>
 </head>
 <body>
+username:<input type="text" name="username" onkeypress="if(event.keyCode==13) {btnname.click();return false;}">
+<input class="submit" type="submit" value="submit" name="btnname" onclick="NewClient();" />
 <script>
-    var client = mqtt.connect('ws://127.0.0.1:5000');
-
-    client.subscribe("presence");
-
-    client.on("message", function(topic, payload) {
+    var settings = {
+        keepalive: 10,
+        protocolId: 'websocket',
+//        protocolVersion: 3,
+        clientId: 'username',
+//        clientId: client_Id,
+        username: "alice",
+        password: "secret",
+        clean: false
+    }
+    var client = mqtt.connect();
+    client.on("message", function (topic, payload) {
         alert([topic, payload].join(": "));
 //        client.end();
     });
 
-    client.publish("presence", "hello world!");
+    function NewClient() {
+        var username = document.getElementsByName("username")[0];
+        settings.clientId = username.value;
+        var client = mqtt.connect('ws://127.0.0.1:5000', settings);
+
+        client.on('connect', function () {
+            client.subscribe('presence',{qos:1});
+        });
+
+
+
+        client.publish("presence", "hello world!");
+    }
 </script>
 </body>
 </html>
