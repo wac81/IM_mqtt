@@ -33,6 +33,7 @@ var settings = {
         url: mongoUrl,
     },
     maxInflightMessages:300,
+    publishClientDisconnect:true,
     backend: ascoltatore
 };
 // mqtt protocol
@@ -51,7 +52,14 @@ var settings = {
 var MqttServer = new mosca.Server(settings);
 
 MqttServer.on('clientConnected', function(client){
+
+    //var state = {clientId:client.id,state:'connected',offline:false};
+    //for(var sub in client.subscriptions)
+    //{
+    //    MqttServer.publish({topic:sub, payload:JSON.stringify(state)});
+    //}
     console.log('client connected', client.id);
+    return true;
 });
 
 /**
@@ -62,18 +70,18 @@ MqttServer.on('published', function(packet, client) {
     switch(topic){
         case 'pubMsg':
             console.log('message-publish', packet.payload.toString());
-            //MQTT×ª·¢Ö÷ÌâÏûÏ¢
+            //MQTT×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
             MqttServer.publish({topic: 'other', payload: 'sssss'});
-            //·¢ËÍÏûÏ¢NODEJS
-            console.log('HD: '+ YHSocketMap.get('1000'));
-            //·¢ËÍsocket.ioÏûÏ¢
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢NODEJS
+            //console.log('HD: '+ YHSocketMap.get('1000'));
+            //ï¿½ï¿½ï¿½ï¿½socket.ioï¿½ï¿½Ï¢
             //io.sockets.socket(YHSocketMap.get('1000')).emit('subState', packet);
             break;
         case 'other':
             console.log('message-123', packet.payload.toString());
             break;
     }
-    console.log("Published :=", packet.payload);
+    console.log("Published :=", packet.payload.toString());
 });
 
 MqttServer.on("error", function (err) {
@@ -85,7 +93,16 @@ MqttServer.on('subscribed', function (topic, client) {
 });
 
 MqttServer.on('clientDisconnected', function (client) {
+    //send everyclients offline messages
+    //var state = {clientId:client.id,state:'disconnected',offline:true};
+    //for(var sub in client.subscriptions)
+    //{
+    //    MqttServer.publish({topic:sub, payload:JSON.stringify(state)});
+    //
+    //}
+    delete this.clients[client.id];
     console.log('Client Disconnected     := ', client.id);
+    //return true;
 });
 MqttServer.on('ready', function() {
     //MqttServer.authenticate = authenticate;

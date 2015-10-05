@@ -4,11 +4,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
     <script src="/javascripts/browserMqtt.js" charset="utf-8"></script>
+    <script src="/javascripts/getBrowserState.js" charset="utf-8"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
 <body>
 
-<textarea name="chattext"  rows="20" cols="38" readonly="true"></textarea>
+<TABLE id="table">
+    <TR CLASS="top">
+        <TD> <textarea name="chattext"  rows="20" cols="30" readonly="true"></textarea>
+        <TD > <textarea id="state"  rows="20" cols="8" readonly="true"  style="BORDER-BOTTOM: 0px solid; BORDER-LEFT: 0px solid; BORDER-RIGHT: 0px solid; BORDER-TOP: 0px solid;resize: none;"></textarea>
+            <!--<label name="userstate" ></label>-->
+</TABLE>
+
 <br/>
 <!--<input class="submit" type="submit" value="close" name="btnclose" onclick="closeClient();" />-->
 <!--<br>-->
@@ -35,39 +42,62 @@
         clean: false
     }
 
-
     settings.clientId =  document.getElementsByName("username")[0].innerText.trim();
-//    var client = mqtt.connect('ws://127.0.0.1:5000', settings); // you add a ws:// url here
-        client = mqtt.connect('ws://acnlp.com:5000', settings);
+    var client = mqtt.connect('ws://127.0.0.1:5000', settings); // you add a ws:// url here
+//        client = mqtt.connect('ws://acnlp.com:5000', settings);
     var ct = document.getElementsByName("chattext")[0];
 
 
-    client.subscribe("presence", {qos: 1});
+    client.on('offline',function(err){
+        console.log(err);
+    });
+
+    client.subscribe("$SYS/#");
+
+    client.subscribe("presence", {qos: 1},function(err){
+        console.log(err);
+
+    });
 //    client.on('connect', function () {
 //        client.subscribe("presence",{qos:1}); //qos  offline msg
 //    });
-
-
     client.on('error', function (err) {
         console.log(err);
 //        client.end();
     });
 
     client.on("message", function (topic, payload) {
-        var pl = JSON.parse(payload)
-        if (pl.userid == settings.clientId)
+        if (payload.length==0) return true;
+        console.log(topic.toString(),payload.toString());
+        var pl=null;
+        if (isJson(payload)) pl = JSON.parse(payload);
+        else {
+            creatElemet(topic,payload);
+            return;
+        }
+
+        //deal with offline state
+
+
+        //deal with offline state by myself
+//        if (pl.offline != null) {
+//            creatElemet(pl)
+//            return true;
+//        }
+
+        if (pl.userid != null && pl.userid == settings.clientId)
             ct.value = ct.value + "\r\n" + "我:" + pl.content;
-        else
+        else if (pl.userid != null && pl.userid != settings.clientId)
             ct.value = ct.value + "\r\n" + pl.userid + ":" + pl.content;
 
-        ct.scrollTop = ct.scrollHeight
+        //auto scroll bottom
+        ct.scrollTop = ct.scrollHeight;
     });
 
 //    client.on('close', function () {
 ////        alert(settings.clientId + " disconected")
 //        console.log(settings.clientId + " disconected");
 //    });
-
 
     function sendMsg() {
 //        client_Id+":"+contentbyclient.value
@@ -91,6 +121,57 @@
         client.end();
     }
 
+
+    //detect browser is visiblity
+    var prefix = getBrowserPrefix();
+    var hidden = hiddenProperty(prefix);
+    var visibilityState = visibilityState(prefix);
+    var visibilityEvent = visibilityEvent(prefix);
+
+    // Visibility Change
+//    document.addEventListener(visibilityEvent, function(event) {
+//        if (document[hidden]) {
+////            clearTimeout(timer);
+////            var val = parseInt($('#valueContainer').text());
+////            document.title = val + ': Pause';
+//        } else {
+//            client.subscribe("presence", {qos: 1},function(err){
+//                console.log(err);
+//
+//            });
+//        }
+//    });
+    function creatElemet(topic,payload)
+    {
+
+        var st = document.getElementById("state");
+
+        st.value = st.value + "\r\n" + payload.toString();
+        if (topic.indexOf("disconnect")>-1) st.value = st.value + ":OFF"
+        else st.value = st.value +":ON"
+        //auto scroll bottom
+        st.scrollTop = st.scrollHeight;
+////        st.value  =  st.value + "\r\n" + "<style font color=#FF0000>"+ pl.clientId+"</style>"
+////        var Con=document.getElementById("table");
+////        var row = Con.insertRow(0);
+////        var cell = row.insertCell(0);
+//        st.value = st.value + "\r\n" + pl.clientId;
+//        var oFont1=document.createElement("FONT");
+//        var oText1=document.createTextNode("\r\n" + pl.clientId);
+//
+//        if (pl.offline) st.value = st.value + ":OFF"
+//        else st.value = st.value +":ON"
+
+    }
+
+    function isJson(str) {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
 </script>
 </body>
 </html>

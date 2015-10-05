@@ -57,6 +57,7 @@ if (cluster.isMaster) {
             url: mongoUrl,
         },
         maxInflightMessages:300,
+        publishClientDisconnect:true,
         backend: ascoltatore
     };
 // mqtt protocol
