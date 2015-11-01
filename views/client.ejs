@@ -43,8 +43,8 @@
     }
 
     settings.clientId =  document.getElementsByName("username")[0].innerText.trim();
-    var client = mqtt.connect('ws://127.0.0.1:5000', settings); // you add a ws:// url here
-//        client = mqtt.connect('ws://acnlp.com:5000', settings);
+//    var client = mqtt.connect('ws://127.0.0.1:5000', settings); // you add a ws:// url here
+        client = mqtt.connect('ws://acnlp.com:5000', settings);
     var ct = document.getElementsByName("chattext")[0];
 
 
@@ -129,18 +129,12 @@
     var visibilityEvent = visibilityEvent(prefix);
 
     // Visibility Change
-//    document.addEventListener(visibilityEvent, function(event) {
-//        if (document[hidden]) {
-////            clearTimeout(timer);
-////            var val = parseInt($('#valueContainer').text());
-////            document.title = val + ': Pause';
-//        } else {
-//            client.subscribe("presence", {qos: 1},function(err){
-//                console.log(err);
-//
-//            });
-//        }
-//    });
+    document.addEventListener(visibilityEvent, function(event) {
+        if (!document[hidden]) {
+            client.subscribe("presence", {qos: 1});
+        }
+    });
+
     function creatElemet(topic,payload)
     {
 
